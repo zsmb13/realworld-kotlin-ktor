@@ -10,9 +10,11 @@
 
 setlocal
 
-set amper_version=0.3.0-dev-567
-set amper_url=https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/amper/cli/%amper_version%/cli-%amper_version%-dist.zip
-set amper_sha256=fe9abc30ddc3f88403fa77bcd5847252facc5a834f289ffa78c064759802ded8
+set amper_version=0.3.0
+set amper_url=https://maven.pkg.jetbrains.space/public/p/amper/amper/org/jetbrains/amper/cli/%amper_version%/cli-%amper_version%-dist.zip
+
+@rem Establish chain of trust from here by specifying exact checksum of Amper distribution to be run
+set amper_sha256=3573ad7585d7d32a5c085281d7344fa891add6a6f332c6e453a02104932137ae
 
 if "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
     set jvm_url=https://aka.ms/download-jdk/microsoft-jdk-17.0.6-windows-aarch64.zip
@@ -64,7 +66,7 @@ if errorlevel 1 goto fail
 
 REM ********** Run Amper **********
 
-"%AMPER_JAVA_HOME%\bin\java.exe" -ea "-Damper.wrapper.process.name=%~nx0" -cp "%amper_target_dir%lib\*" org.jetbrains.amper.cli.MainKt %*
+"%AMPER_JAVA_HOME%\bin\java.exe" -ea "-Damper.wrapper.dist.sha256=%amper_sha256%" "-Damper.wrapper.process.name=%~nx0" -cp "%amper_target_dir%lib\*" org.jetbrains.amper.cli.MainKt %*
 exit /B %ERRORLEVEL%
 
 REM ********** Download And Extract Any Zip Archive **********
